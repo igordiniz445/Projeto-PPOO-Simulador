@@ -1,9 +1,14 @@
+package Controllers;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 
+import Utils.Location;
+
 /**
+
  * Representa uma grade retangular de posições do campo. Cada posição é capaz de
  * armazenar um único animal.
  * 
@@ -12,6 +17,7 @@ import java.util.Random;
  */
 public class Field {
     private static final Random rand = new Random();
+
 
     // A profundidade e largura de um campo
     private int depth, width;
