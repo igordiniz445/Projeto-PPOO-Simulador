@@ -13,7 +13,7 @@ import Controllers.Field;
  * @author David J. Barnes and Michael Kolling
  * @version 2002-04-11
  */
-public class Fox {
+public class Fox extends Animal {
     // Characteristics shared by all foxes (static fields).
 
     // The age at which a fox can start to breed.
@@ -32,14 +32,6 @@ public class Fox {
 
     // Individual characteristics (instance fields).
 
-    // The fox's age.
-    private int age;
-    // Whether the fox is alive or not.
-    private boolean alive;
-    // The fox's position
-    private Location location;
-    // The fox's food level, which is increased by eating rabbits.
-    private int foodLevel;
 
     /**
      * Create a fox. A fox can be created as a new born (age zero and not hungry) or
@@ -48,14 +40,15 @@ public class Fox {
      * @param randomAge If true, the fox will have random age and hunger level.
      */
     public Fox(boolean randomAge) {
-        age = 0;
-        alive = true;
+        super();
+        setAge(0);
+        setAlive(true);
         if (randomAge) {
-            age = rand.nextInt(MAX_AGE);
-            foodLevel = rand.nextInt(RABBIT_FOOD_VALUE);
+            setAge(rand.nextInt(MAX_AGE));
+            setFoodLevel(rand.nextInt(RABBIT_FOOD_VALUE));
         } else {
             // leave age at 0
-            foodLevel = RABBIT_FOOD_VALUE;
+            setFoodLevel(RABBIT_FOOD_VALUE);
         }
     }
 
@@ -86,7 +79,7 @@ public class Fox {
                 updatedField.place(this, newLocation);
             } else {
                 // can neither move nor stay - overcrowding - all locations taken
-                alive = false;
+                setAlive(false);
             }
         }
     }
@@ -95,9 +88,9 @@ public class Fox {
      * Increase the age. This could result in the fox's death.
      */
     private void incrementAge() {
-        age++;
-        if (age > MAX_AGE) {
-            alive = false;
+        setAge(getAge()+1);
+        if (getAge() > MAX_AGE) {
+            setAlive(false);
         }
     }
 
@@ -105,9 +98,9 @@ public class Fox {
      * Make this fox more hungry. This could result in the fox's death.
      */
     private void incrementHunger() {
-        foodLevel--;
-        if (foodLevel <= 0) {
-            alive = false;
+        setFoodLevel(getFoodLevel()-1);
+        if (getFoodLevel() <= 0) {
+            setAlive(false);
         }
     }
 
@@ -127,7 +120,7 @@ public class Fox {
                 Rabbit rabbit = (Rabbit) animal;
                 if (rabbit.isAlive()) {
                     rabbit.setEaten();
-                    foodLevel = RABBIT_FOOD_VALUE;
+                    setFoodLevel(RABBIT_FOOD_VALUE);
                     return where;
                 }
             }
@@ -152,16 +145,7 @@ public class Fox {
      * A fox can breed if it has reached the breeding age.
      */
     private boolean canBreed() {
-        return age >= BREEDING_AGE;
-    }
-
-    /**
-     * Check whether the fox is alive or not.
-     * 
-     * @return True if the fox is still alive.
-     */
-    public boolean isAlive() {
-        return alive;
+        return getAge() >= BREEDING_AGE;
     }
 
     /**
@@ -174,12 +158,9 @@ public class Fox {
         this.location = new Location(row, col);
     }
 
-    /**
-     * Set the fox's location.
-     * 
-     * @param location The fox's location.
-     */
-    public void setLocation(Location location) {
-        this.location = location;
+    @Override
+    public void action(Field field, Field updatedField, List<Animal> newAnimals) {
+        hunt(field, updatedField, newAnimals);
     }
+    
 }

@@ -12,7 +12,7 @@ import Controllers.Field;
  * @author David J. Barnes and Michael Kolling
  * @version 2002-04-11
  */
-public class Rabbit {
+public class Rabbit extends Animal {
     // Characteristics shared by all rabbits (static fields).
 
     // The age at which a rabbit can start to breed.
@@ -26,14 +26,6 @@ public class Rabbit {
     // A shared random number generator to control breeding.
     private static final Random rand = new Random();
 
-    // Individual characteristics (instance fields).
-
-    // The rabbit's age.
-    private int age;
-    // Whether the rabbit is alive or not.
-    private boolean alive;
-    // The rabbit's position
-    private Location location;
 
     /**
      * Create a new rabbit. A rabbit may be created with age zero (a new born) or
@@ -42,10 +34,11 @@ public class Rabbit {
      * @param randomAge If true, the rabbit will have a random age.
      */
     public Rabbit(boolean randomAge) {
-        age = 0;
-        alive = true;
+        super();
+        setAge(0);
+        setAlive(true);
         if (randomAge) {
-            age = rand.nextInt(MAX_AGE);
+            setAge(rand.nextInt(MAX_AGE));
         }
     }
 
@@ -55,7 +48,7 @@ public class Rabbit {
      */
     public void run(Field updatedField, List newRabbits) {
         incrementAge();
-        if (alive) {
+        if (isAlive()) {
             int births = breed();
             for (int b = 0; b < births; b++) {
                 Rabbit newRabbit = new Rabbit(false);
@@ -71,7 +64,7 @@ public class Rabbit {
                 updatedField.place(this, newLocation);
             } else {
                 // can neither move nor stay - overcrowding - all locations taken
-                alive = false;
+                setAlive(false);
             }
         }
     }
@@ -80,9 +73,9 @@ public class Rabbit {
      * Increase the age. This could result in the rabbit's death.
      */
     private void incrementAge() {
-        age++;
-        if (age > MAX_AGE) {
-            alive = false;
+        setAge(getAge()+1);
+        if (getAge() > MAX_AGE) {
+            setAlive(false);
         }
     }
 
@@ -103,23 +96,14 @@ public class Rabbit {
      * A rabbit can breed if it has reached the breeding age.
      */
     private boolean canBreed() {
-        return age >= BREEDING_AGE;
-    }
-
-    /**
-     * Check whether the rabbit is alive or not.
-     * 
-     * @return True if the rabbit is still alive.
-     */
-    public boolean isAlive() {
-        return alive;
+        return getAge() >= BREEDING_AGE;
     }
 
     /**
      * Tell the rabbit that it's dead now :(
      */
     public void setEaten() {
-        alive = false;
+        setAlive(false);
     }
 
     /**
@@ -132,12 +116,9 @@ public class Rabbit {
         this.location = new Location(row, col);
     }
 
-    /**
-     * Set the rabbit's location.
-     * 
-     * @param location The rabbit's location.
-     */
-    public void setLocation(Location location) {
-        this.location = location;
+    @Override
+    public void action(Field field, Field updatedField, List<Animal> newAnimals) {
+        run(updatedField, newAnimals);
     }
+
 }
