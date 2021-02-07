@@ -35,10 +35,6 @@ public abstract class Animal {
         return this.alive;
     }
 
-    protected boolean getAlive() {
-        return this.alive;
-    }
-
     protected void setAlive(boolean alive) {
         this.alive = alive;
     }
@@ -59,32 +55,9 @@ public abstract class Animal {
         this.foodLevel = foodLevel;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof Animal)) {
-            return false;
-        }
-        Animal animal = (Animal) o;
-        return age == animal.age && alive == animal.alive && Objects.equals(location, animal.location) && foodLevel == animal.foodLevel;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(age, alive, location, foodLevel);
-    }
-
     protected abstract void action(Field field, Field updatedField, List<Animal> newAnimals );
 
 	public void act(Field field, Field updatedField, List<Animal> newAnimals, List<Animal> animals) {
-        for(Iterator<Animal> it = animals.iterator(); it.hasNext();){
-            Animal animal = it.next();
-            if(animal.isAlive()){
-                animal.action(field, updatedField, newAnimals);
-            }else{
-                it.remove();
-            }
-        }
+        action(field, updatedField, newAnimals);
 	}
 }

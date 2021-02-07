@@ -114,9 +114,10 @@ public class Simulator {
         for (Iterator iter = animals.iterator(); iter.hasNext();) {
 
             Animal animal = (Animal)iter.next();
-            // TODO generalizar inclusão de novos atores
-            animal.act(field, updatedField, newAnimals, animals);
-            
+            if(animal.isAlive())
+                animal.act(field, updatedField, newAnimals, animals);
+            else
+                iter.remove();
         }
         // add new born animals to the list of animals
         animals.addAll(newAnimals);

@@ -162,5 +162,11 @@ public class Fox extends Animal {
     public void action(Field field, Field updatedField, List<Animal> newAnimals) {
         hunt(field, updatedField, newAnimals);
     }
+
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        return "Raposa";
+    }
     
 }

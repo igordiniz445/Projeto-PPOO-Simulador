@@ -121,4 +121,9 @@ public class Rabbit extends Animal {
         run(updatedField, newAnimals);
     }
 
+    @Override
+    public String toString() {
+        // TODO Auto-generated method stub
+        return "Coelho";
+    }
 }
