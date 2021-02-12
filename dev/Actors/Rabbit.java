@@ -72,7 +72,8 @@ public class Rabbit extends Animal {
     /**
      * Increase the age. This could result in the rabbit's death.
      */
-    private void incrementAge() {
+    @Override
+    public void incrementAge() {
         setAge(getAge()+1);
         if (getAge() > MAX_AGE) {
             setAlive(false);
@@ -95,7 +96,8 @@ public class Rabbit extends Animal {
     /**
      * A rabbit can breed if it has reached the breeding age.
      */
-    private boolean canBreed() {
+    @Override
+    protected boolean canBreed() {
         return getAge() >= BREEDING_AGE;
     }
 
@@ -125,5 +127,23 @@ public class Rabbit extends Animal {
     public String toString() {
         // TODO Auto-generated method stub
         return "Coelho";
+    }
+
+    @Override
+    public int getBreedingAge() {
+        // TODO Auto-generated method stub
+        return this.BREEDING_AGE;
+    }
+
+    @Override
+    public void act(List<Actor> newActors) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    boolean isActive() {
+        // TODO Auto-generated method stub
+        return false;
     }
 }

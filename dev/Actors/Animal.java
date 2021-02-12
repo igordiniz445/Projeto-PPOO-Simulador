@@ -7,7 +7,7 @@ import java.util.Objects;
 import Controllers.Field;
 import Utils.Location;
 
-public abstract class Animal {
+public abstract class Animal extends Actor {
     
     protected int age;
     protected boolean alive;
@@ -60,4 +60,10 @@ public abstract class Animal {
 	public void act(Field field, Field updatedField, List<Animal> newAnimals, List<Animal> animals) {
         action(field, updatedField, newAnimals);
 	}
+
+    protected abstract boolean canBreed();
+
+    protected abstract int getBreedingAge();
+
+    protected abstract void incrementAge();
 }

@@ -87,7 +87,8 @@ public class Fox extends Animal {
     /**
      * Increase the age. This could result in the fox's death.
      */
-    private void incrementAge() {
+    @Override
+    public void incrementAge() {
         setAge(getAge()+1);
         if (getAge() > MAX_AGE) {
             setAlive(false);
@@ -141,12 +142,6 @@ public class Fox extends Animal {
         return births;
     }
 
-    /**
-     * A fox can breed if it has reached the breeding age.
-     */
-    private boolean canBreed() {
-        return getAge() >= BREEDING_AGE;
-    }
 
     /**
      * Set the animal's location.
@@ -162,11 +157,33 @@ public class Fox extends Animal {
     public void action(Field field, Field updatedField, List<Animal> newAnimals) {
         hunt(field, updatedField, newAnimals);
     }
+    
+    @Override
+    protected boolean canBreed() {
+        return getAge() >= BREEDING_AGE;
+    }
 
+    @Override
+    public int getBreedingAge() {
+        // TODO Auto-generated method stub
+        return this.BREEDING_AGE;
+    }
+    
     @Override
     public String toString() {
         // TODO Auto-generated method stub
         return "Raposa";
     }
-    
+
+    @Override
+    public void act(List<Actor> newActors) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    boolean isActive() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }
