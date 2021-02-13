@@ -1,8 +1,10 @@
 package Controllers;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 import Utils.Location;
@@ -127,9 +129,9 @@ public class Field {
      *         as locais estiverem preenchidas.
      */
     public Location freeAdjacentLocation(Location location) {
-        Iterator adjacent = adjacentLocations(location);
+        Iterator<Location> adjacent = adjacentLocations(location);
         while (adjacent.hasNext()) {
-            Location next = (Location) adjacent.next();
+            Location next = adjacent.next();
             if (field[next.getRow()][next.getCol()] == null) {
                 return next;
             }
@@ -149,10 +151,10 @@ public class Field {
      * @param location Um local de onde gerar os adjacents.
      * @return Um iterador que itera sobre dada localização adjacente passada.
      */
-    public Iterator adjacentLocations(Location location) {
+    public Iterator<Location> adjacentLocations(Location location) {
         int row = location.getRow();
         int col = location.getCol();
-        LinkedList locations = new LinkedList();
+        LinkedList<Location> locations = new LinkedList<Location>();
         for (int roffset = -1; roffset <= 1; roffset++) {
             int nextRow = row + roffset;
             if (nextRow >= 0 && nextRow < depth) {
@@ -167,6 +169,20 @@ public class Field {
         }
         Collections.shuffle(locations, rand);
         return locations.iterator();
+    }
+
+    public List<Location> getFreeAdjacentLocation(Location location){
+        List<Location> freeAdjacentLocation = new ArrayList<Location>();
+        
+        Iterator<Location> adjacentLocation = this.adjacentLocations(location);
+        
+        while(adjacentLocation.hasNext()){
+            Location freeLocation = freeAdjacentLocation(adjacentLocation.next());
+            if(freeLocation != null){
+                freeAdjacentLocation.add(location);
+            }
+        }
+        return freeAdjacentLocation;
     }
 
     /**

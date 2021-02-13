@@ -1,8 +1,6 @@
 package Actors;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 import Controllers.Field;
 import Utils.Location;
@@ -10,17 +8,15 @@ import Utils.Location;
 public abstract class Animal extends Actor {
     
     protected int age;
-    protected boolean alive;
     protected Location location;
     protected int foodLevel;
 
-    public Animal() {}
 
-    public Animal(int age, boolean alive, Location location, int foodLevel) {
+    public Animal(int age, boolean alive, Location location) {
+        super();
         this.age = age;
-        this.alive = alive;
+        this.active = alive;
         this.location = location;
-        this.foodLevel = foodLevel;
     }
 
     protected int getAge() {
@@ -29,14 +25,6 @@ public abstract class Animal extends Actor {
 
     protected void setAge(int age) {
         this.age = age;
-    }
-
-    public boolean isAlive() {
-        return this.alive;
-    }
-
-    protected void setAlive(boolean alive) {
-        this.alive = alive;
     }
 
     protected Location getLocation() {
@@ -55,9 +43,9 @@ public abstract class Animal extends Actor {
         this.foodLevel = foodLevel;
     }
 
-    protected abstract void action(Field field, Field updatedField, List<Animal> newAnimals );
+    protected abstract void action(Field field, Field updatedField, List<Actor> newAnimals );
 
-	public void act(Field field, Field updatedField, List<Animal> newAnimals, List<Animal> animals) {
+	public void act(Field field, Field updatedField, List<Actor> newAnimals, List<Actor> animals) {
         action(field, updatedField, newAnimals);
 	}
 

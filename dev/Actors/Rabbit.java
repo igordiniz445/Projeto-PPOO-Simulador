@@ -27,16 +27,16 @@ public class Rabbit extends Animal {
     private static final Random rand = new Random();
 
 
+    private Field currentField;
+
     /**
      * Create a new rabbit. A rabbit may be created with age zero (a new born) or
      * with a random age.
      * 
      * @param randomAge If true, the rabbit will have a random age.
      */
-    public Rabbit(boolean randomAge) {
-        super();
-        setAge(0);
-        setAlive(true);
+    public Rabbit(boolean randomAge, Field field, Location location) {
+        super(0, true, location);
         if (randomAge) {
             setAge(rand.nextInt(MAX_AGE));
         }
@@ -46,15 +46,14 @@ public class Rabbit extends Animal {
      * This is what the rabbit does most of the time - it runs around. Sometimes it
      * will breed or die of old age.
      */
-    public void run(Field updatedField, List newRabbits) {
+    public void run(Field updatedField, List<Actor> newRabbits) {
         incrementAge();
-        if (isAlive()) {
+        if (isActive()) {
             int births = breed();
             for (int b = 0; b < births; b++) {
-                Rabbit newRabbit = new Rabbit(false);
-                newRabbits.add(newRabbit);
                 Location loc = updatedField.randomAdjacentLocation(location);
-                newRabbit.setLocation(loc);
+                Rabbit newRabbit = new Rabbit(false, updatedField, loc);
+                newRabbits.add(newRabbit);
                 updatedField.place(newRabbit, loc);
             }
             Location newLocation = updatedField.freeAdjacentLocation(location);
@@ -64,8 +63,19 @@ public class Rabbit extends Animal {
                 updatedField.place(this, newLocation);
             } else {
                 // can neither move nor stay - overcrowding - all locations taken
-                setAlive(false);
+                setActive(false);
             }
+        }
+    }
+
+
+    private void giveBirth(List<Actor> newRabbits) {
+        List<Location> free = currentField.getFreeAdjacentLocation(location);
+        int births = breed();
+        for(int b = 0; b < births && free.size() > 0; b++){
+            Location loc = free.remove(0);
+            Rabbit newRabbit = new Rabbit(false, currentField, loc);
+            newRabbits.add(newRabbit);
         }
     }
 
@@ -76,7 +86,7 @@ public class Rabbit extends Animal {
     public void incrementAge() {
         setAge(getAge()+1);
         if (getAge() > MAX_AGE) {
-            setAlive(false);
+            setActive(false);
         }
     }
 
@@ -105,7 +115,7 @@ public class Rabbit extends Animal {
      * Tell the rabbit that it's dead now :(
      */
     public void setEaten() {
-        setAlive(false);
+        setActive(false);
     }
 
     /**
@@ -119,7 +129,7 @@ public class Rabbit extends Animal {
     }
 
     @Override
-    public void action(Field field, Field updatedField, List<Animal> newAnimals) {
+    public void action(Field field, Field updatedField, List<Actor> newAnimals) {
         run(updatedField, newAnimals);
     }
 
@@ -135,15 +145,5 @@ public class Rabbit extends Animal {
         return this.BREEDING_AGE;
     }
 
-    @Override
-    public void act(List<Actor> newActors) {
-        // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    boolean isActive() {
-        // TODO Auto-generated method stub
-        return false;
-    }
 }
