@@ -159,7 +159,6 @@ public class Simulator {
                 if (rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
                     Fox fox = new Fox(true, field, new Location(row, col));
                     actors.add(fox);
-                    fox.setLocation(row, col);
                     field.place(fox, row, col);
                 } else if (rand.nextDouble() <= RABBIT_CREATION_PROBABILITY) {
                     Rabbit rabbit = new Rabbit(true, field, new Location(row, col));

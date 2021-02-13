@@ -37,6 +37,7 @@ public class Rabbit extends Animal {
      */
     public Rabbit(boolean randomAge, Field field, Location location) {
         super(0, true, location);
+        this.currentField = field;
         if (randomAge) {
             setAge(rand.nextInt(MAX_AGE));
         }
@@ -49,13 +50,8 @@ public class Rabbit extends Animal {
     public void run(Field updatedField, List<Actor> newRabbits) {
         incrementAge();
         if (isActive()) {
-            int births = breed();
-            for (int b = 0; b < births; b++) {
-                Location loc = updatedField.randomAdjacentLocation(location);
-                Rabbit newRabbit = new Rabbit(false, updatedField, loc);
-                newRabbits.add(newRabbit);
-                updatedField.place(newRabbit, loc);
-            }
+            giveBirth(newRabbits, updatedField);
+
             Location newLocation = updatedField.freeAdjacentLocation(location);
             // Only transfer to the updated field if there was a free location
             if (newLocation != null) {
@@ -69,11 +65,10 @@ public class Rabbit extends Animal {
     }
 
 
-    private void giveBirth(List<Actor> newRabbits) {
-        List<Location> free = currentField.getFreeAdjacentLocation(location);
+    private void giveBirth(List<Actor> newRabbits, Field updatedField) {
         int births = breed();
-        for(int b = 0; b < births && free.size() > 0; b++){
-            Location loc = free.remove(0);
+        for(int b = 0; b < births; b++){
+            Location loc = updatedField.randomAdjacentLocation(location);
             Rabbit newRabbit = new Rabbit(false, currentField, loc);
             newRabbits.add(newRabbit);
         }
