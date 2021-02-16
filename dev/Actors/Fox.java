@@ -1,6 +1,7 @@
 package Actors;
 
 import java.util.List;
+import java.io.File;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -31,7 +32,7 @@ public class Fox extends Animal {
     private static final Random rand = new Random();
 
     // Individual characteristics (instance fields).
-
+    private Field currentField;
 
     /**
      * Create a fox. A fox can be created as a new born (age zero and not hungry) or
@@ -39,10 +40,9 @@ public class Fox extends Animal {
      * 
      * @param randomAge If true, the fox will have random age and hunger level.
      */
-    public Fox(boolean randomAge) {
-        super();
-        setAge(0);
-        setAlive(true);
+    public Fox(boolean randomAge, Field field, Location location) {
+        super(0, true, location);
+        this.currentField = field;
         if (randomAge) {
             setAge(rand.nextInt(MAX_AGE));
             setFoodLevel(rand.nextInt(RABBIT_FOOD_VALUE));
@@ -56,19 +56,14 @@ public class Fox extends Animal {
      * This is what the fox does most of the time: it hunts for rabbits. In the
      * process, it might breed, die of hunger, or die of old age.
      */
-    public void hunt(Field currentField, Field updatedField, List newFoxes) {
+    public void hunt(Field updatedField, List<Actor> newFoxes) {
         incrementAge();
         incrementHunger();
-        if (isAlive()) {
+        if (isActive()) {
             // New foxes are born into adjacent locations.
-            int births = breed();
-            for (int b = 0; b < births; b++) {
-                Fox newFox = new Fox(false);
-                newFoxes.add(newFox);
-                Location loc = updatedField.randomAdjacentLocation(location);
-                newFox.setLocation(loc);
-                updatedField.place(newFox, loc);
-            }
+
+            giveBirth(newFoxes);
+           
             // Move towards the source of food if found.
             Location newLocation = findFood(currentField, location);
             if (newLocation == null) { // no food found - move randomly
@@ -79,18 +74,29 @@ public class Fox extends Animal {
                 updatedField.place(this, newLocation);
             } else {
                 // can neither move nor stay - overcrowding - all locations taken
-                setAlive(false);
+                setActive(false);
             }
+        }
+    }
+
+    private void giveBirth(List<Actor> newFoxes) {
+        List<Location> free = currentField.getFreeAdjacentLocation(location);
+        int births = breed();
+        for(int b = 0; b < births && free.size() > 0; b++){
+            Location loc = free.remove(0);
+            Fox newFox = new Fox(false, currentField, loc);
+            newFoxes.add(newFox);
         }
     }
 
     /**
      * Increase the age. This could result in the fox's death.
      */
-    private void incrementAge() {
+    @Override
+    public void incrementAge() {
         setAge(getAge()+1);
         if (getAge() > MAX_AGE) {
-            setAlive(false);
+            setActive(false);
         }
     }
 
@@ -100,7 +106,7 @@ public class Fox extends Animal {
     private void incrementHunger() {
         setFoodLevel(getFoodLevel()-1);
         if (getFoodLevel() <= 0) {
-            setAlive(false);
+            setActive(false);
         }
     }
 
@@ -118,7 +124,7 @@ public class Fox extends Animal {
             Object animal = field.getObjectAt(where);
             if (animal instanceof Rabbit) {
                 Rabbit rabbit = (Rabbit) animal;
-                if (rabbit.isAlive()) {
+                if (rabbit.isActive()) {
                     rabbit.setEaten();
                     setFoodLevel(RABBIT_FOOD_VALUE);
                     return where;
@@ -141,12 +147,6 @@ public class Fox extends Animal {
         return births;
     }
 
-    /**
-     * A fox can breed if it has reached the breeding age.
-     */
-    private boolean canBreed() {
-        return getAge() >= BREEDING_AGE;
-    }
 
     /**
      * Set the animal's location.
@@ -159,14 +159,25 @@ public class Fox extends Animal {
     }
 
     @Override
-    public void action(Field field, Field updatedField, List<Animal> newAnimals) {
-        hunt(field, updatedField, newAnimals);
+    public void action(Field field, Field updatedField, List<Actor> newAnimals) {
+        hunt( updatedField, newAnimals);
+    }
+    
+    @Override
+    protected boolean canBreed() {
+        return getAge() >= BREEDING_AGE;
     }
 
+    @Override
+    public int getBreedingAge() {
+        // TODO Auto-generated method stub
+        return this.BREEDING_AGE;
+    }
+    
     @Override
     public String toString() {
         // TODO Auto-generated method stub
         return "Raposa";
     }
-    
+
 }

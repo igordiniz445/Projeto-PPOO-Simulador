@@ -10,6 +10,7 @@ import java.awt.Color;
 
 import Controllers.Field;
 import View.SimulatorView;
+import Utils.*;
 import Actors.*;
 
 /**
@@ -32,9 +33,9 @@ public class Simulator {
     private static final double RABBIT_CREATION_PROBABILITY = 0.08;
 
     // The list of animals in the field
-    private List<Animal> animals;
+    private List<Actor> actors;
     // The list of animals just born
-    private List<Animal> newAnimals;
+    private List<Actor> newActors;
     // The current state of the field.
     private Field field;
     // A second field, used to build the next stage of the simulation.
@@ -64,8 +65,8 @@ public class Simulator {
             depth = DEFAULT_DEPTH;
             width = DEFAULT_WIDTH;
         }
-        animals = new ArrayList<Animal>();
-        newAnimals = new ArrayList<Animal>();
+        actors = new ArrayList<Actor>();
+        newActors = new ArrayList<Actor>();
         field = new Field(depth, width);
         updatedField = new Field(depth, width);
 
@@ -108,19 +109,20 @@ public class Simulator {
      */
     public void simulateOneStep() {
         step++;
-        newAnimals.clear();
+        newActors.clear();
 
         // let all animals act
-        for (Iterator iter = animals.iterator(); iter.hasNext();) {
+        for (Iterator iter = actors.iterator(); iter.hasNext();) {
 
-            Animal animal = (Animal)iter.next();
-            if(animal.isAlive())
-                animal.act(field, updatedField, newAnimals, animals);
+            Actor actor = (Actor)iter.next();
+            
+            if(actor.isActive())
+                actor.act(field, updatedField, newActors, actors);
             else
                 iter.remove();
         }
         // add new born animals to the list of animals
-        animals.addAll(newAnimals);
+        actors.addAll(newActors);
 
         // Swap the field and updatedField at the end of the step.
         Field temp = field;
@@ -137,7 +139,7 @@ public class Simulator {
      */
     public void reset() {
         step = 0;
-        animals.clear();
+        actors.clear();
         field.clear();
         updatedField.clear();
         populate(field);
@@ -155,19 +157,17 @@ public class Simulator {
         for (int row = 0; row < field.getDepth(); row++) {
             for (int col = 0; col < field.getWidth(); col++) {
                 if (rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
-                    Fox fox = new Fox(true);
-                    animals.add(fox);
-                    fox.setLocation(row, col);
+                    Fox fox = new Fox(true, field, new Location(row, col));
+                    actors.add(fox);
                     field.place(fox, row, col);
                 } else if (rand.nextDouble() <= RABBIT_CREATION_PROBABILITY) {
-                    Rabbit rabbit = new Rabbit(true);
-                    animals.add(rabbit);
-                    rabbit.setLocation(row, col);
+                    Rabbit rabbit = new Rabbit(true, field, new Location(row, col));
+                    actors.add(rabbit);
                     field.place(rabbit, row, col);
                 }
                 // else leave the location empty.
             }
         }
-        Collections.shuffle(animals);
+        Collections.shuffle(actors);
     }
 }
