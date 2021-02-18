@@ -1,12 +1,14 @@
 
 package View;
 
-import Controllers.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.HashMap;
+
+import Controllers.*;
+import Core.SimulatorView;
+
 
 /**
  * A graphical view of the simulation grid. The view displays a colored
@@ -17,7 +19,7 @@ import java.util.HashMap;
  * @author David J. Barnes and Michael Kolling
  * @version 2002-04-23
  */
-public class SimulatorView extends JFrame {
+public class AnimatedView extends JFrame implements SimulatorView {
     // Colors used for empty locations.
     private static final Color EMPTY_COLOR = Color.white;
 
@@ -37,7 +39,8 @@ public class SimulatorView extends JFrame {
     /**
      * Create a view of the given width and height.
      */
-    public SimulatorView(int height, int width) {
+    public AnimatedView(int height, int width) {
+
         stats = new FieldStats();
         colors = new HashMap();
 
@@ -55,6 +58,7 @@ public class SimulatorView extends JFrame {
         contents.add(population, BorderLayout.SOUTH);
         pack();
         setVisible(true);
+
     }
 
     /**
