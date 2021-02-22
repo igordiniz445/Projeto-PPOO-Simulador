@@ -5,8 +5,9 @@ import java.util.List;
 import Controllers.Field;
 import Utils.Location;
 
-public abstract class Animal extends Actor {
+public abstract class Animal implements Actor {
     
+    protected boolean active;
     protected int age;
     protected Location location;
     protected int foodLevel;
@@ -17,6 +18,14 @@ public abstract class Animal extends Actor {
         this.age = age;
         this.active = alive;
         this.location = location;
+    }
+
+    public void setActive(boolean alive){
+        this.active = alive;
+    }
+
+    public boolean isActive() {
+        return this.active;
     }
 
     protected int getAge() {

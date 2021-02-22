@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.awt.Color;
 
 import Controllers.Field;
-import View.SimulatorView;
+import View.AnimatedView;
 import Utils.*;
 import Actors.*;
 
@@ -71,7 +71,7 @@ public class Simulator {
         updatedField = new Field(depth, width);
 
         // Create a view of the state of each location in the field.
-        view = new SimulatorView(depth, width);
+        view = new AnimatedView(depth, width);
         view.setColor(Fox.class, Color.blue);
         view.setColor(Rabbit.class, Color.orange);
 
