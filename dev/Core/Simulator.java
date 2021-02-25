@@ -31,6 +31,8 @@ public class Simulator {
     private static final double FOX_CREATION_PROBABILITY = 0.02;
     // The probability that a rabbit will be created in any given grid position.
     private static final double RABBIT_CREATION_PROBABILITY = 0.08;
+    // The probability that a Huntter will be created in any given grid position.
+    private static final double HUNTER_CREATION_PROBABILITY = 0.998;
 
     // The list of animals in the field
     private List<Actor> actors;
@@ -74,6 +76,7 @@ public class Simulator {
         view = new AnimatedView(depth, width);
         view.setColor(Fox.class, Color.blue);
         view.setColor(Rabbit.class, Color.orange);
+        view.setColor(Hunter.class, Color.red);
 
         // Setup a valid starting point.
         reset();
@@ -94,7 +97,7 @@ public class Simulator {
     public void simulate(int numSteps) {
         for (int step = 1; step <= numSteps && view.isViable(field); step++) {
             try {
-                TimeUnit.MILLISECONDS.sleep(500);
+                TimeUnit.MILLISECONDS.sleep(300);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -158,16 +161,23 @@ public class Simulator {
             for (int col = 0; col < field.getWidth(); col++) {
                 if (rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
                     Fox fox = new Fox(true, field, new Location(row, col));
-                    actors.add(fox);
-                    field.place(fox, row, col);
+                    adicionaNoMapa(fox, row, col);
                 } else if (rand.nextDouble() <= RABBIT_CREATION_PROBABILITY) {
                     Rabbit rabbit = new Rabbit(true, field, new Location(row, col));
-                    actors.add(rabbit);
-                    field.place(rabbit, row, col);
+                    adicionaNoMapa(rabbit, row, col);
+                } else if (rand.nextDouble() > HUNTER_CREATION_PROBABILITY){
+                    Hunter hunter = new Hunter(true, field, new Location(row, col));
+                    adicionaNoMapa(hunter, row, col);
                 }
                 // else leave the location empty.
             }
         }
         Collections.shuffle(actors);
+    }
+
+
+    private void adicionaNoMapa(Actor ator, int row, int col){
+        actors.add(ator);
+        field.place(ator, row, col);
     }
 }
