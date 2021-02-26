@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.awt.Color;
 
 import Controllers.Field;
+import Controllers.SeasonsController;
 import View.AnimatedView;
 import Utils.*;
 import Actors.*;
@@ -87,7 +88,7 @@ public class Simulator {
      * 500 steps.
      */
     public void runLongSimulation() {
-        simulate(500);
+        simulate(800);
     }
 
     /**
@@ -102,6 +103,16 @@ public class Simulator {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+            if(step <= 200 ){
+                SeasonsController.definirVerao();
+            }else if(step > 200 && step <= 400){
+                SeasonsController.definirOutono();
+            }else if(step > 400 && step <= 600){
+                SeasonsController.definirOutono();
+            }else{
+                SeasonsController.definirPrimavera();
+            }
+               
             simulateOneStep();
         }
     }

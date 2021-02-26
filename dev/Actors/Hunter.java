@@ -2,6 +2,7 @@ package Actors;
 
 import View.Drawable;
 import Controllers.Field;
+import Controllers.SeasonsController;
 import Utils.Location;
 
 import java.util.Iterator;
@@ -14,25 +15,34 @@ public class Hunter implements Actor, Drawable {
     private static final double BREEDING_PROBABILITY = 0.05;
     private static final int BREEDING_AGE = 20;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 3;
-
+    private static final int MAX_LITTER_SIZE = 2;
+    // number of steps a fox can go before it has to eat again.
+    private static final int ANIMAL_FOOD_VALUE = 6;
 
     private static final Random rand = new Random();
     private boolean active;
     private Location location;
     private Field field;
     private Integer age;
+    private int foodLevel;
 
     public Hunter(boolean active, Field field, Location location) {
 
         this.setLocation(location);
         this.setField(field);
         this.setActive(active);
-        this.age = 0;
+        if (rand.nextInt(100) < 50) {
+            setAge(rand.nextInt(MAX_AGE));
+            setFoodLevel(rand.nextInt(ANIMAL_FOOD_VALUE));
+        } else {
+            this.age = 0;
+            setFoodLevel(ANIMAL_FOOD_VALUE);
+        }
     }
 
     public void act(Field field, Field updatedField, List<Actor> newAnimals ,List<Actor> animals) {
         incrementAge();
+        incrementHunger();
         if (isActive()) {
             // New foxes are born into adjacent locations.
             giveBirth(newAnimals, updatedField);
@@ -60,6 +70,7 @@ public class Hunter implements Actor, Drawable {
                 Animal presa = (Animal) animal;
                 if (presa.isActive()) {
                     presa.setActive(false);
+                    setFoodLevel(ANIMAL_FOOD_VALUE);
                     return where;
                 }
             }
@@ -80,9 +91,8 @@ public class Hunter implements Actor, Drawable {
 
     private int breed() {
         int births = 0;
-        Double numeroaleatorio = rand.nextDouble();
-        if (canBreed() && numeroaleatorio <= BREEDING_PROBABILITY) {
-            births = rand.nextInt(MAX_LITTER_SIZE) + 1;
+        if (canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
+            births = rand.nextInt(MAX_LITTER_SIZE * SeasonsController.getCurrentSeason().getBreedingAdjust()) + 1;
         }
         return births;
     }
@@ -95,6 +105,21 @@ public class Hunter implements Actor, Drawable {
     private void incrementAge() {
         setAge(getAge()+1);
         if (getAge() > MAX_AGE) {
+            setActive(false);
+        }
+    }
+
+    protected int getFoodLevel() {
+        return this.foodLevel;
+    }
+
+    protected void setFoodLevel(int foodLevel) {
+        this.foodLevel = foodLevel;
+    }
+
+    private void incrementHunger() {
+        setFoodLevel(getFoodLevel() -1 - SeasonsController.getCurrentSeason().getHungerAdjust());
+        if (getFoodLevel() <= 0) {
             setActive(false);
         }
     }
