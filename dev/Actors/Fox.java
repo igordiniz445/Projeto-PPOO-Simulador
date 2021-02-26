@@ -61,7 +61,7 @@ public class Fox extends Animal {
         incrementHunger();
         if (isActive()) {
             // New foxes are born into adjacent locations.
-
+            
             giveBirth(newFoxes);
            
             // Move towards the source of food if found.
