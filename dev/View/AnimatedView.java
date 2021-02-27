@@ -58,6 +58,7 @@ public class AnimatedView extends JFrame implements SimulatorView {
         fieldView = new FieldView(height, width);
 
         Container contents = getContentPane();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         contents.add(CreateButtonsPannel(), BorderLayout.EAST);
         contents.add(stepLabel, BorderLayout.NORTH);
         contents.add(fieldView, BorderLayout.CENTER);
