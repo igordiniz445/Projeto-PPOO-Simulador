@@ -86,7 +86,9 @@ public class AnimatedView extends JFrame implements SimulatorView {
             new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e){
+
                     Simulator.pauseSimulation();
+                    
                 }
             }
         );
@@ -95,7 +97,9 @@ public class AnimatedView extends JFrame implements SimulatorView {
             new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e){
+
                     Simulator.pauseSimulation();
+
                 }
             }
         );
@@ -104,6 +108,8 @@ public class AnimatedView extends JFrame implements SimulatorView {
                 @Override
                 public void actionPerformed(ActionEvent e){
                     
+                    Simulator.nextFlag = true;
+
                 }
             }
         );

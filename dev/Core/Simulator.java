@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Collections;
 import java.awt.Color;
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 
 import Actors.*;
@@ -36,6 +37,8 @@ public class Simulator{
 
     private static boolean isSimulationPaused = true;
 
+    public static boolean nextFlag = false;
+
     // private static boolean canRunOneStep = false;
 
     // The list of animals in the field
@@ -51,9 +54,9 @@ public class Simulator{
     // A graphical view of the simulation.
     private SimulatorView view;
 
-    private static final int FOOD_UPPER_BOUND = 1000000;
+    private static final int FOOD_UPPER_BOUND = 500000;
     
-    private static final int FOOD_LOWER_BOUND = 100000;
+    private static final int FOOD_LOWER_BOUND = 10000;
 
     private static Map<String, Integer> conditions;
 
@@ -112,7 +115,6 @@ public class Simulator{
 
     public static int getCondition(String condition) {
 
-        System.out.println(conditions);
         return Simulator.conditions.get(condition);
 
     }
@@ -121,9 +123,7 @@ public class Simulator{
      * Run the simulation from its current state for a reasonably long period, e.g.
      * 500 steps.
      */
-    public void runLongSimulation() {
-        simulate(800);
-    }
+    public void runLongSimulation() { simulate(800); }
 
     /**
      * Run the simulation from its current state for the given number of steps. Stop
@@ -131,46 +131,74 @@ public class Simulator{
      */
     public void simulate(int numSteps) {
         for (int step = 1; step <= numSteps && view.isViable(field); step++) {
+            System.out.println(step + " o teste do for");
             if(!isSimulationPaused) {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(0);
+                    TimeUnit.MILLISECONDS.sleep(100);
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                if(step <= 200 ){
-                    SeasonsController.definirVerao();
-                    view.updateSeasonField("Verão");
-                    updateConditionsByPeriod(2);
-                }else if(step > 200 && step <= 400){
-                    SeasonsController.definirOutono();
-                    view.updateSeasonField("Outono");
-                    updateConditionsByPeriod(5);
-                }else if(step > 400 && step <= 600){
-                    SeasonsController.definirInverno();
-                    view.updateSeasonField("Inverno");
-                    updateConditionsByPeriod(8);
-                }else{
-                    SeasonsController.definirPrimavera();
-                    view.updateSeasonField("Primavera");
-                    updateConditionsByPeriod(1);
-                }
+                this.defineSeason(step);
                 simulateOneStep();
-            }else{
-                step = step - 1;
+
+            } else {
+
+                if (Simulator.nextFlag) {
+                    
+                    Simulator.nextFlag = !Simulator.nextFlag;
+                    this.defineSeason(step);
+                    simulateOneStep();
+
+                } else {
+
+                    step -= 1;
+
+                }
+
             }
         }
     }
 
-    private void updateConditionsByPeriod(int days) {
+    private void defineSeason(int step) {
 
+        if(step <= 200 ){
+            SeasonsController.definirVerao();
+            view.updateSeasonField("Verão");
+            updateConditionsByPeriod(2);
+        }else if(step > 200 && step <= 400){
+            SeasonsController.definirOutono();
+            view.updateSeasonField("Outono");
+            updateConditionsByPeriod(4);
+        }else if(step > 400 && step <= 600){
+            SeasonsController.definirInverno();
+            view.updateSeasonField("Inverno");
+            updateConditionsByPeriod(6);
+        }else{
+            SeasonsController.definirPrimavera();
+            view.updateSeasonField("Primavera");
+            updateConditionsByPeriod(1);
+        }
+
+    }
+
+    private void updateConditionsByPeriod(int days) {
+        
+        //#TODO BOSTA TA AQUI
         Simulator.updateConditions("RABBIT_FOOD_LEVEL", 
         
-            ((Simulator.getCondition("RABBIT_FOOD_LEVEL") % days) == 0) ? 
+            ((Simulator.getCondition("RABBIT_FOOD_LEVEL") % days) != 0) ? 
                 Simulator.getCondition("RABBIT_FOOD_LEVEL") + FOOD_LOWER_BOUND : 
                 Simulator.getCondition("RABBIT_FOOD_LEVEL")
 
         );
+
+        // int updated = Simulator.getCondition("RABBIT_FOOD_LEVEL");
+
+        // if ((Simulator.getCondition("RABBIT_FOOD_LEVEL") % days) == 0) {
+        //     updated += 
+        // }
+        //Simulator.updateConditions("RABBIT_FOOD_LEVEL", updated);
 
         view.updateFoodLevelField(Simulator.getCondition("RABBIT_FOOD_LEVEL"));
 
