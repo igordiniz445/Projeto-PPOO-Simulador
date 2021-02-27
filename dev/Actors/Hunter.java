@@ -92,7 +92,7 @@ public class Hunter implements Actor, Drawable {
     private int breed() {
         int births = 0;
         if (canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
-            births = rand.nextInt(MAX_LITTER_SIZE * SeasonsController.getCurrentSeason().getBreedingAdjust()) + 1;
+            births = rand.nextInt(MAX_LITTER_SIZE * SeasonsController.getCurrentSeason().getBreedingAdjust() + 1);
         }
         return births;
     }
