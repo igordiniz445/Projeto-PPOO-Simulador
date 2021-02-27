@@ -88,6 +88,7 @@ public class Simulator{
             depth = DEFAULT_DEPTH;
             width = DEFAULT_WIDTH;
         }
+        this.initConditions();
         actors = new ArrayList<Actor>();
         newActors = new ArrayList<Actor>();
         field = new Field(depth, width);
@@ -105,13 +106,14 @@ public class Simulator{
 
     public static void updateConditions(String condition, int value) {
 
-        conditions.replace(condition, value);
+        Simulator.conditions.replace(condition, value);
 
     }
 
     public static int getCondition(String condition) {
 
-        return conditions.get(condition);
+        System.out.println(conditions);
+        return Simulator.conditions.get(condition);
 
     }
 
@@ -131,22 +133,26 @@ public class Simulator{
         for (int step = 1; step <= numSteps && view.isViable(field); step++) {
             if(!isSimulationPaused) {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(300);
+                    TimeUnit.MILLISECONDS.sleep(0);
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 if(step <= 200 ){
                     SeasonsController.definirVerao();
+                    view.updateSeasonField("Verão");
                     updateConditionsByPeriod(2);
                 }else if(step > 200 && step <= 400){
                     SeasonsController.definirOutono();
-                    updateConditionsByPeriod(3);
+                    view.updateSeasonField("Outono");
+                    updateConditionsByPeriod(5);
                 }else if(step > 400 && step <= 600){
                     SeasonsController.definirInverno();
-                    updateConditionsByPeriod(4);
+                    view.updateSeasonField("Inverno");
+                    updateConditionsByPeriod(8);
                 }else{
                     SeasonsController.definirPrimavera();
+                    view.updateSeasonField("Primavera");
                     updateConditionsByPeriod(1);
                 }
                 simulateOneStep();
@@ -165,6 +171,8 @@ public class Simulator{
                 Simulator.getCondition("RABBIT_FOOD_LEVEL")
 
         );
+
+        view.updateFoodLevelField(Simulator.getCondition("RABBIT_FOOD_LEVEL"));
 
     }
 

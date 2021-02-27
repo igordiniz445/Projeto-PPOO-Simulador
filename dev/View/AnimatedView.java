@@ -31,7 +31,8 @@ public class AnimatedView extends JFrame implements SimulatorView {
     private JLabel stepLabel, population;
     private JButton startButton, pauseButton, forwardButton;
     private FieldView fieldView;
-    private JTextField foodLevel;
+    private JLabel foodLevel;
+    private JLabel seasonLabel;
 
     // A map for storing colors for participants in the simulation
     private HashMap colors;
@@ -50,7 +51,8 @@ public class AnimatedView extends JFrame implements SimulatorView {
         startButton = new JButton("Iniciar");
         pauseButton = new JButton("Pausar");
         forwardButton = new JButton("Avançar");
-        foodLevel = new JTextField(Simulator.getCondition("RABBIT_FOOD_LEVEL"));
+        foodLevel = new JLabel();
+        seasonLabel = new JLabel();
 
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
         population = new JLabel(POPULATION_PREFIX, JLabel.CENTER);
@@ -78,6 +80,8 @@ public class AnimatedView extends JFrame implements SimulatorView {
         buttonPannel.add(startButton, BorderLayout.LINE_START);
         buttonPannel.add(pauseButton, BorderLayout.AFTER_LAST_LINE);
         buttonPannel.add(forwardButton, BorderLayout.AFTER_LINE_ENDS);
+        buttonPannel.add(foodLevel, BorderLayout.PAGE_END);
+        buttonPannel.add(seasonLabel, BorderLayout.LINE_END);
         startButton.addActionListener(
             new ActionListener(){
                 @Override
@@ -105,6 +109,10 @@ public class AnimatedView extends JFrame implements SimulatorView {
         );
         return buttonPannel;
     }
+
+    public void updateFoodLevelField(int level) { this.foodLevel.setText(level + " unidades de comida.");}
+
+    public void updateSeasonField(String season) { this.seasonLabel.setText(season); }
 
     /**
      * Define a color to be used for a given class of animal.
