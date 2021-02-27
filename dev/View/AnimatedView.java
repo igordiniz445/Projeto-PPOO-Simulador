@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 import Controllers.*;
 import Core.SimulatorView;
-
+import Core.Simulator;
 
 /**
  * A graphical view of the simulation grid. The view displays a colored
@@ -22,13 +22,14 @@ import Core.SimulatorView;
 public class AnimatedView extends JFrame implements SimulatorView {
     // Colors used for empty locations.
     private static final Color EMPTY_COLOR = Color.white;
-
     // Color used for objects that have no defined color.
     private static final Color UNKNOWN_COLOR = Color.gray;
 
     private final String STEP_PREFIX = "Step: ";
     private final String POPULATION_PREFIX = "Population: ";
+    private JPanel buttonPannel;
     private JLabel stepLabel, population;
+    private JButton startButton, pauseButton, forwardButton;
     private FieldView fieldView;
 
     // A map for storing colors for participants in the simulation
@@ -45,6 +46,10 @@ public class AnimatedView extends JFrame implements SimulatorView {
         colors = new HashMap();
 
         setTitle("Fox and Rabbit Simulation");
+        startButton = new JButton("Iniciar");
+        pauseButton = new JButton("Pausar");
+        forwardButton = new JButton("Avançar");
+
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
         population = new JLabel(POPULATION_PREFIX, JLabel.CENTER);
 
@@ -53,12 +58,50 @@ public class AnimatedView extends JFrame implements SimulatorView {
         fieldView = new FieldView(height, width);
 
         Container contents = getContentPane();
+        contents.add(CreateButtonsPannel(), BorderLayout.EAST);
         contents.add(stepLabel, BorderLayout.NORTH);
         contents.add(fieldView, BorderLayout.CENTER);
         contents.add(population, BorderLayout.SOUTH);
         pack();
         setVisible(true);
 
+    }
+
+    /**
+     * Cria menu lateral com botões e indicadores;
+     */
+
+    public JPanel CreateButtonsPannel(){
+        buttonPannel = new JPanel();
+        buttonPannel.add(startButton, BorderLayout.LINE_START);
+        buttonPannel.add(pauseButton, BorderLayout.AFTER_LAST_LINE);
+        buttonPannel.add(forwardButton, BorderLayout.AFTER_LINE_ENDS);
+        startButton.addActionListener(
+            new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    Simulator.pauseSimulation();
+                }
+            }
+        );
+
+        pauseButton.addActionListener(
+            new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    Simulator.pauseSimulation();
+                }
+            }
+        );
+        forwardButton.addActionListener(
+            new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    
+                }
+            }
+        );
+        return buttonPannel;
     }
 
     /**

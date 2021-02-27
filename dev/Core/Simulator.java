@@ -21,7 +21,7 @@ import Actors.*;
  * @author David J. Barnes and Michael Kolling
  * @version 2002-04-09
  */
-public class Simulator {
+public class Simulator{
     // The private static final variables represent
     // configuration information for the simulation.
     // The default width for the grid.
@@ -34,6 +34,10 @@ public class Simulator {
     private static final double RABBIT_CREATION_PROBABILITY = 0.08;
     // The probability that a Huntter will be created in any given grid position.
     private static final double HUNTER_CREATION_PROBABILITY = 0.998;
+
+    private static boolean isSimulationPaused = true;
+
+    // private static boolean canRunOneStep = false;
 
     // The list of animals in the field
     private List<Actor> actors;
@@ -97,23 +101,26 @@ public class Simulator {
      */
     public void simulate(int numSteps) {
         for (int step = 1; step <= numSteps && view.isViable(field); step++) {
-            try {
-                TimeUnit.MILLISECONDS.sleep(300);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            if(step <= 200 ){
-                SeasonsController.definirVerao();
-            }else if(step > 200 && step <= 400){
-                SeasonsController.definirOutono();
-            }else if(step > 400 && step <= 600){
-                SeasonsController.definirOutono();
+            if(!isSimulationPaused) {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(300);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                if(step <= 200 ){
+                    SeasonsController.definirVerao();
+                }else if(step > 200 && step <= 400){
+                    SeasonsController.definirOutono();
+                }else if(step > 400 && step <= 600){
+                    SeasonsController.definirOutono();
+                }else{
+                    SeasonsController.definirPrimavera();
+                }
+                simulateOneStep();
             }else{
-                SeasonsController.definirPrimavera();
+                step = step - 1;
             }
-               
-            simulateOneStep();
         }
     }
 
@@ -121,7 +128,7 @@ public class Simulator {
      * Run the simulation from its current state for a single step. Iterate over the
      * whole field updating the state of each fox and rabbit.
      */
-    public void simulateOneStep() {
+    private void simulateOneStep() {
         step++;
         newActors.clear();
 
@@ -191,4 +198,9 @@ public class Simulator {
         actors.add(ator);
         field.place(ator, row, col);
     }
+
+    public static void pauseSimulation(){
+        isSimulationPaused = !isSimulationPaused;
+    }
+
 }

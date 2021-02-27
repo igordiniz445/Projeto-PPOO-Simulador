@@ -4,7 +4,7 @@ import Utils.Season;
 
 public class SeasonsController {
 
-    private static Boolean verao ;
+    private static Boolean verao;
     private static Boolean outono;
     private static Boolean inverno;
     private static Boolean primavera;
