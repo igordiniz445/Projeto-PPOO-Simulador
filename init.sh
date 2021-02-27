@@ -1,2 +1,3 @@
 echo "[ .. ] Executando aplicação..."
-java build/Principal
+cd build/
+java Core/Principal
