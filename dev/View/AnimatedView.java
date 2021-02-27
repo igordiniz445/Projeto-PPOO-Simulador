@@ -31,6 +31,7 @@ public class AnimatedView extends JFrame implements SimulatorView {
     private JLabel stepLabel, population;
     private JButton startButton, pauseButton, forwardButton;
     private FieldView fieldView;
+    private JTextField foodLevel;
 
     // A map for storing colors for participants in the simulation
     private HashMap colors;
@@ -49,6 +50,7 @@ public class AnimatedView extends JFrame implements SimulatorView {
         startButton = new JButton("Iniciar");
         pauseButton = new JButton("Pausar");
         forwardButton = new JButton("Avançar");
+        foodLevel = new JTextField(Simulator.getCondition("RABBIT_FOOD_LEVEL"));
 
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
         population = new JLabel(POPULATION_PREFIX, JLabel.CENTER);

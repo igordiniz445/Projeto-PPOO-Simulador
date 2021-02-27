@@ -3,20 +3,19 @@ package Core;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Collections;
 import java.awt.Color;
+import java.util.HashMap;
 
+import Actors.*;
 import Controllers.Field;
 import Controllers.SeasonsController;
 import View.AnimatedView;
 import Utils.*;
-import Actors.*;
-
-/**
- * A simple predator-prey simulator, based on a field containing rabbits and
- * foxes.
+/*
  * 
  * @author David J. Barnes and Michael Kolling
  * @version 2002-04-09
@@ -52,11 +51,28 @@ public class Simulator{
     // A graphical view of the simulation.
     private SimulatorView view;
 
+    private static final int FOOD_UPPER_BOUND = 1000000;
+    
+    private static final int FOOD_LOWER_BOUND = 100000;
+
+    private static Map<String, Integer> conditions;
+
     /**
      * Construct a simulation field with default size.
      */
     public Simulator() {
+
         this(DEFAULT_DEPTH, DEFAULT_WIDTH);
+        this.initConditions();
+    }
+
+    private void initConditions() {
+
+        Random rand = new Random();
+
+        conditions = new HashMap<String, Integer>();
+        conditions.put("RABBIT_FOOD_LEVEL", rand.nextInt(FOOD_UPPER_BOUND - FOOD_LOWER_BOUND) + FOOD_LOWER_BOUND);
+
     }
 
     /**
@@ -87,6 +103,18 @@ public class Simulator{
         reset();
     }
 
+    public static void updateConditions(String condition, int value) {
+
+        conditions.replace(condition, value);
+
+    }
+
+    public static int getCondition(String condition) {
+
+        return conditions.get(condition);
+
+    }
+
     /**
      * Run the simulation from its current state for a reasonably long period, e.g.
      * 500 steps.
@@ -110,18 +138,34 @@ public class Simulator{
                 }
                 if(step <= 200 ){
                     SeasonsController.definirVerao();
+                    updateConditionsByPeriod(2);
                 }else if(step > 200 && step <= 400){
                     SeasonsController.definirOutono();
+                    updateConditionsByPeriod(3);
                 }else if(step > 400 && step <= 600){
-                    SeasonsController.definirOutono();
+                    SeasonsController.definirInverno();
+                    updateConditionsByPeriod(4);
                 }else{
                     SeasonsController.definirPrimavera();
+                    updateConditionsByPeriod(1);
                 }
                 simulateOneStep();
             }else{
                 step = step - 1;
             }
         }
+    }
+
+    private void updateConditionsByPeriod(int days) {
+
+        Simulator.updateConditions("RABBIT_FOOD_LEVEL", 
+        
+            ((Simulator.getCondition("RABBIT_FOOD_LEVEL") % days) == 0) ? 
+                Simulator.getCondition("RABBIT_FOOD_LEVEL") + FOOD_LOWER_BOUND : 
+                Simulator.getCondition("RABBIT_FOOD_LEVEL")
+
+        );
+
     }
 
     /**
@@ -131,7 +175,6 @@ public class Simulator{
     private void simulateOneStep() {
         step++;
         newActors.clear();
-
         // let all animals act
         for (Iterator iter = actors.iterator(); iter.hasNext();) {
 
