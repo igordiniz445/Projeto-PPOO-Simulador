@@ -54,6 +54,8 @@ public class Simulator{
     // A graphical view of the simulation.
     private SimulatorView view;
 
+    private static int speed;
+
     private static final int FOOD_UPPER_BOUND = 500000;
     
     private static final int FOOD_LOWER_BOUND = 10000;
@@ -131,10 +133,9 @@ public class Simulator{
      */
     public void simulate(int numSteps) {
         for (int step = 1; step <= numSteps && view.isViable(field); step++) {
-            System.out.println(step + " o teste do for");
             if(!isSimulationPaused) {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(100);
+                    TimeUnit.MILLISECONDS.sleep(speed);
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -279,7 +280,14 @@ public class Simulator{
     }
 
     public static void pauseSimulation(){
-        isSimulationPaused = !isSimulationPaused;
+        isSimulationPaused = true;
     }
 
+    public static void startSimulation(){
+        isSimulationPaused = false;
+    }
+
+    public static void setSpeed(int speed){
+        Simulator.speed = speed;
+    }
 }
