@@ -54,7 +54,7 @@ public class Simulator{
     // A graphical view of the simulation.
     private SimulatorView view;
 
-    private static final int FOOD_UPPER_BOUND = 500000;
+    private static final int FOOD_UPPER_BOUND = 5000000;
     
     private static final int FOOD_LOWER_BOUND = 10000;
 
@@ -131,7 +131,6 @@ public class Simulator{
      */
     public void simulate(int numSteps) {
         for (int step = 1; step <= numSteps && view.isViable(field); step++) {
-            System.out.println(step + " o teste do for");
             if(!isSimulationPaused) {
                 try {
                     TimeUnit.MILLISECONDS.sleep(100);
@@ -163,33 +162,36 @@ public class Simulator{
     private void defineSeason(int step) {
 
         if(step <= 200 ){
-            SeasonsController.definirVerao();
-            view.updateSeasonField("Verão");
-            updateConditionsByPeriod(2);
-        }else if(step > 200 && step <= 400){
-            SeasonsController.definirOutono();
-            view.updateSeasonField("Outono");
-            updateConditionsByPeriod(4);
-        }else if(step > 400 && step <= 600){
-            SeasonsController.definirInverno();
-            view.updateSeasonField("Inverno");
-            updateConditionsByPeriod(6);
-        }else{
             SeasonsController.definirPrimavera();
             view.updateSeasonField("Primavera");
-            updateConditionsByPeriod(1);
+            updateConditionsByPeriod(1, 5);
+            
+        }else if(step > 200 && step <= 400){
+            SeasonsController.definirVerao();
+            view.updateSeasonField("Verão");
+            updateConditionsByPeriod(2, 4);
+            
+        }else if(step > 400 && step <= 600){
+            SeasonsController.definirOutono();
+            view.updateSeasonField("Outono");
+            updateConditionsByPeriod(6, 2);
+
+        }else{
+            SeasonsController.definirInverno();
+            view.updateSeasonField("Inverno");
+            updateConditionsByPeriod(10, 3);
         }
 
     }
 
-    private void updateConditionsByPeriod(int days) {
+    private void updateConditionsByPeriod(int days, int adjustValue) {
         
-        //#TODO BOSTA TA AQUI
+        
         Simulator.updateConditions("RABBIT_FOOD_LEVEL", 
         
-            ((Simulator.getCondition("RABBIT_FOOD_LEVEL") % days) != 0) ? 
-                Simulator.getCondition("RABBIT_FOOD_LEVEL") + FOOD_LOWER_BOUND : 
-                Simulator.getCondition("RABBIT_FOOD_LEVEL")
+            (step % days == 0) ? 
+                Simulator.getCondition("RABBIT_FOOD_LEVEL") + FOOD_LOWER_BOUND * adjustValue : 
+                Simulator.getCondition("RABBIT_FOOD_LEVEL") - FOOD_LOWER_BOUND * adjustValue  
 
         );
 
@@ -200,7 +202,7 @@ public class Simulator{
         // }
         //Simulator.updateConditions("RABBIT_FOOD_LEVEL", updated);
 
-        view.updateFoodLevelField(Simulator.getCondition("RABBIT_FOOD_LEVEL"));
+        view.updateFoodLevelField(Simulator.getCondition("RABBIT_FOOD_LEVEL") <= 0 ? 0 : Simulator.getCondition("RABBIT_FOOD_LEVEL"));
 
     }
 
