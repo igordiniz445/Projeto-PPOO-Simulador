@@ -26,12 +26,12 @@ public class Hunter implements Actor, Drawable {
     private Integer age;
     private int foodLevel;
 
-    public Hunter(boolean active, Field field, Location location) {
+    public Hunter(boolean randomAge, Field field, Location location) {
 
         this.setLocation(location);
         this.setField(field);
-        this.setActive(active);
-        if (rand.nextInt(100) < 50) {
+        this.setActive(true);
+        if (randomAge) {
             setAge(rand.nextInt(MAX_AGE));
             setFoodLevel(rand.nextInt(ANIMAL_FOOD_VALUE));
         } else {
@@ -67,22 +67,39 @@ public class Hunter implements Actor, Drawable {
             Location where = (Location) adjacentLocations.next();
             Object animal = field.getObjectAt(where);
             if (animal instanceof Animal) {
-                Animal presa = (Animal) animal;
-                if (presa.isActive()) {
-                    presa.setActive(false);
-                    setFoodLevel(ANIMAL_FOOD_VALUE);
-                    return where;
+                if(animal instanceof Fox){
+                    //10% de chance do caçador morrer pra raposa
+                    if(rand.nextInt(100) < 10){
+                        //Tentou caçar a raposa, e morreu
+                        setActive(false);
+                    }else{
+                        //era uma raposa, comeu a raposa
+                        return eatAnimal(animal, where); 
+                    }
+                }else{
+                    //era um coelho, comeu o coelho
+                    return eatAnimal(animal, where);
                 }
             }
         }
         return null;
     }
 
+    private Location eatAnimal(Object animal, Location where){
+        Animal presa = (Animal) animal;
+        if (presa.isActive()) {
+            presa.setActive(false);
+            setFoodLevel(ANIMAL_FOOD_VALUE);
+            return where;
+        }
+        return where;
+    }
+
     private void giveBirth(List<Actor> newHunters, Field updatedField) {
         int births = breed();
         for(int b = 0; b < births; b++){
             Location loc = updatedField.randomAdjacentLocation(location);
-            Hunter newHunter = new Hunter(true, this.field, loc);
+            Hunter newHunter = new Hunter(false, this.field, loc);
             newHunters.add(newHunter);
         }
     }
@@ -92,7 +109,7 @@ public class Hunter implements Actor, Drawable {
     private int breed() {
         int births = 0;
         if (canBreed() && rand.nextDouble() <= BREEDING_PROBABILITY) {
-            births = rand.nextInt(MAX_LITTER_SIZE * SeasonsController.getCurrentSeason().getBreedingAdjust() + 1);
+            births = rand.nextInt(MAX_LITTER_SIZE * (SeasonsController.getCurrentSeason().getBreedingAdjust() + 1));
         }
         return births;
     }

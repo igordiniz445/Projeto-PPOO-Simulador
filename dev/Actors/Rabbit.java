@@ -25,10 +25,7 @@ public class Rabbit extends Animal {
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 5;
     // A shared random number generator to control breeding.
-
-    private static final int EAT_LEVEL_1 = 5;
-    private static final int EAT_LEVEL_2 = 3;
-    private static final int EAT_LEVEL_3 = 4;
+    private int DAYS_WITHOUT_FOOD = 0;
 
     private static final Random rand = new Random();
 
@@ -75,45 +72,18 @@ public class Rabbit extends Animal {
 
         if (isActive()) {
 
-            int globalFoodLevel;
-    
-            if (this.getAge() > 0 && this.getAge() < 20) {
+            int globalFoodLevel = Simulator.getCondition("RABBIT_FOOD_LEVEL");
 
-                if ((globalFoodLevel = Simulator.getCondition("RABBIT_FOOD_LEVEL")) >= EAT_LEVEL_1) {
-
-                    Simulator.updateConditions("RABBIT_FOOD_LEVEL", globalFoodLevel - EAT_LEVEL_1);
-
-                } else {
-
-                    this.setActive(false);
-
+            if ((globalFoodLevel) >= 1 && DAYS_WITHOUT_FOOD <= 3) {
+                if(rand.nextInt(globalFoodLevel) > globalFoodLevel/20){
+                    Simulator.updateConditions("RABBIT_FOOD_LEVEL", globalFoodLevel - 1);
+                }else{
+                    DAYS_WITHOUT_FOOD ++;
                 }
-
-            } else if (this.getAge() >= 20 && this.getAge() < 40) {
-
-                if ((globalFoodLevel = Simulator.getCondition("RABBIT_FOOD_LEVEL")) >= EAT_LEVEL_2) {
-
-                    Simulator.updateConditions("RABBIT_FOOD_LEVEL", globalFoodLevel - EAT_LEVEL_2);
-
-                } else {
-
-                    this.setActive(false);
-
-                }
-
-            } else if (this.getAge() >= 40 && this.getAge() <= 50) {
-
-                if ((globalFoodLevel = Simulator.getCondition("RABBIT_FOOD_LEVEL")) >= EAT_LEVEL_3) {
-
-                    Simulator.updateConditions("RABBIT_FOOD_LEVEL", globalFoodLevel - EAT_LEVEL_3);
-
-                } else {
-
-                    this.setActive(false);
-
-                }
-
+            } else {
+                this.setActive(false);
             }
+            
         
         }
 
