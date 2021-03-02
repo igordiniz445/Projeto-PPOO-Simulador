@@ -28,11 +28,10 @@ public class AnimatedView extends JFrame implements SimulatorView {
     private final String STEP_PREFIX = "Step: ";
     private final String POPULATION_PREFIX = "Population: ";
     private JPanel buttonPannel;
-    private JLabel stepLabel, population;
+    private JLabel stepLabel, population, foodLevel, seasonLabel, textSpeed;
     private JButton startButton, pauseButton, forwardButton;
     private FieldView fieldView;
-    private JLabel foodLevel;
-    private JLabel seasonLabel;
+    private JTextArea speed;
 
     // A map for storing colors for participants in the simulation
     private HashMap colors;
@@ -53,6 +52,8 @@ public class AnimatedView extends JFrame implements SimulatorView {
         forwardButton = new JButton("Avançar");
         foodLevel = new JLabel();
         seasonLabel = new JLabel();
+        textSpeed = new JLabel ("Digite a velocidade de simulação: ");
+        speed = new JTextArea();
 
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
         population = new JLabel(POPULATION_PREFIX, JLabel.CENTER);
@@ -83,12 +84,49 @@ public class AnimatedView extends JFrame implements SimulatorView {
         buttonPannel.add(forwardButton, BorderLayout.AFTER_LINE_ENDS);
         buttonPannel.add(foodLevel, BorderLayout.PAGE_END);
         buttonPannel.add(seasonLabel, BorderLayout.LINE_END);
+        buttonPannel.add(textSpeed, BorderLayout.LINE_START);
+        buttonPannel.add(speed, BorderLayout.LINE_START);
+        startButton.setEnabled(false);
+        speed.addKeyListener(new KeyListener(){
+            @Override
+            public void keyPressed(KeyEvent e){
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    e.consume();
+                    Simulator.setSpeed(Integer.parseInt(speed.getText()));
+                    startButton.setEnabled(true);
+                }
+            }
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+        });
+
+        // speed.addActionListener(
+        //     new ActionListener(){
+
+        //         @Override
+        //         public void actionPerformed(ActionEvent e){
+        //             Simulator.setSpeed(Integer.parseInt(speed.getText()));
+        //         }
+        //     }
+        // );
+
         startButton.addActionListener(
             new ActionListener(){
+                
                 @Override
                 public void actionPerformed(ActionEvent e){
-
-                    Simulator.pauseSimulation();
+                    
+                    Simulator.startSimulation();
                     
                 }
             }
