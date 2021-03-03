@@ -8,35 +8,36 @@ import Controllers.Field;
 import Core.Simulator;
 
 /**
- * A simple model of a rabbit. Rabbits age, move, breed, and die.
+ * Um modelo simples de um coelho, que determina suas açoes como comer, reproduzir e morrer
  * 
  * @author David J. Barnes and Michael Kolling
  * @version 2002-04-11
  */
 public class Rabbit extends Animal {
-    // Characteristics shared by all rabbits (static fields).
+    // Caracteristicas de todos os coelhos
 
-    // The age at which a rabbit can start to breed.
+    // Idade para se reproduzie
     private static final int BREEDING_AGE = 5;
-    // The age to which a rabbit can live.
+    // Idade maxima de vida
     private static final int MAX_AGE = 50;
-    // The likelihood of a rabbit breeding.
+    // Chance de se reproduzir
     private static final double BREEDING_PROBABILITY = 0.15;
-    // The maximum number of births.
+    // Numero maximo de reproduções
     private static final int MAX_LITTER_SIZE = 5;
-    // A shared random number generator to control breeding.
-    private int DAYS_WITHOUT_FOOD = 0;
-
+    // Dias que um coelho pode passar sem comer
+    private int CARROT_FOOD_LEVEL = 3;
+    // Variavel pra criar deciçoes aleatórias
     private static final Random rand = new Random();
 
 
     private Field currentField;
 
     /**
-     * Create a new rabbit. A rabbit may be created with age zero (a new born) or
-     * with a random age.
+     * Cria um novo coelho. O coelho pode nascer com idade 0 ou uma idade aleatória
      * 
-     * @param randomAge If true, the rabbit will have a random age.
+     * @param randomAge Se verdadeiro, o coelho nasce com idade aleatória.
+     * @param field O tabuleiro
+     * @param location  A atual localização do coelho
      */
     public Rabbit(boolean randomAge, Field field, Location location) {
         super(0, true, location);
@@ -47,7 +48,7 @@ public class Rabbit extends Animal {
     }
 
     /**
-     * This is what the rabbit does most of the time - it runs around. Sometimes it
+     * Coelho sempre irá correr, as vezes se alimentar e/ou reproduzir, e sempre irá invelhecer
      * will breed or die of old age.
      */
     public void run(Field updatedField, List<Actor> newRabbits) {
@@ -74,11 +75,11 @@ public class Rabbit extends Animal {
 
             int globalFoodLevel = Simulator.getCondition("RABBIT_FOOD_LEVEL");
 
-            if ((globalFoodLevel) >= 1 && DAYS_WITHOUT_FOOD <= 3) {
+            if ((globalFoodLevel) >= 1 && CARROT_FOOD_LEVEL <= 3) {
                 if(rand.nextInt(globalFoodLevel) > globalFoodLevel/20){
                     Simulator.updateConditions("RABBIT_FOOD_LEVEL", globalFoodLevel - 1);
                 }else{
-                    DAYS_WITHOUT_FOOD ++;
+                    CARROT_FOOD_LEVEL ++;
                 }
             } else {
                 this.setActive(false);

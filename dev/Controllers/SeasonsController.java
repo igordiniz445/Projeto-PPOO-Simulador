@@ -43,7 +43,7 @@ public class SeasonsController {
         if(outono)
             return new Season("Outuno", 1, 1);
         if(inverno)
-            return new Season("Inverno", 2, 2);
+            return new Season("Inverno", 2, 1);
         if(primavera)
             return new Season("Primavera", 1, 0);
         else 

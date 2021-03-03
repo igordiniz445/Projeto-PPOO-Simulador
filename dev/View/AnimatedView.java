@@ -50,10 +50,11 @@ public class AnimatedView extends JFrame implements SimulatorView {
         startButton = new JButton("Iniciar");
         pauseButton = new JButton("Pausar");
         forwardButton = new JButton("Avançar");
-        foodLevel = new JLabel();
-        seasonLabel = new JLabel();
+        foodLevel = new JLabel("Comida dos Coelhos: ");
+        seasonLabel = new JLabel("Estação atual: ");
         textSpeed = new JLabel ("Digite a velocidade de simulação: ");
         speed = new JTextArea();
+        speed.setMaximumSize(new Dimension(10,5));
 
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
         population = new JLabel(POPULATION_PREFIX, JLabel.CENTER);
@@ -64,7 +65,7 @@ public class AnimatedView extends JFrame implements SimulatorView {
 
         Container contents = getContentPane();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        contents.add(CreateButtonsPannel(), BorderLayout.EAST);
+        contents.add(RightPannel(), BorderLayout.EAST);
         contents.add(stepLabel, BorderLayout.NORTH);
         contents.add(fieldView, BorderLayout.CENTER);
         contents.add(population, BorderLayout.SOUTH);
@@ -76,16 +77,40 @@ public class AnimatedView extends JFrame implements SimulatorView {
     /**
      * Cria menu lateral com botões e indicadores;
      */
+    public JPanel RightPannel(){
+        JPanel rightPannel = new JPanel();
+        rightPannel.setLayout(new GridLayout(6,1));
+        rightPannel.add(textSpeed);
+        rightPannel.add(speed);
+        rightPannel.add(CreateButtonsPannel());
+        rightPannel.add(FoodPannel());
+        rightPannel.add(SeasonPannel());
+        return rightPannel;
+    }
+
+    public JPanel FoodPannel(){
+        JPanel labePanel = new JPanel();
+        labePanel.add(foodLevel);
+        return labePanel;
+    }
+
+    public JPanel SeasonPannel(){
+        JPanel seasonPanel = new JPanel();
+        seasonPanel.add(seasonLabel);
+        return seasonPanel;
+    }
 
     public JPanel CreateButtonsPannel(){
         buttonPannel = new JPanel();
+
+        
+
         buttonPannel.add(startButton, BorderLayout.LINE_START);
         buttonPannel.add(pauseButton, BorderLayout.AFTER_LAST_LINE);
         buttonPannel.add(forwardButton, BorderLayout.AFTER_LINE_ENDS);
-        buttonPannel.add(foodLevel, BorderLayout.PAGE_END);
-        buttonPannel.add(seasonLabel, BorderLayout.LINE_END);
-        buttonPannel.add(textSpeed, BorderLayout.LINE_START);
-        buttonPannel.add(speed, BorderLayout.LINE_START);
+        //buttonPannel.add(foodLevel, BorderLayout.PAGE_END);
+        //buttonPannel.add(seasonLabel, BorderLayout.LINE_END);
+        
         startButton.setEnabled(false);
         speed.addKeyListener(new KeyListener(){
             @Override
@@ -109,16 +134,6 @@ public class AnimatedView extends JFrame implements SimulatorView {
 				
 			}
         });
-
-        // speed.addActionListener(
-        //     new ActionListener(){
-
-        //         @Override
-        //         public void actionPerformed(ActionEvent e){
-        //             Simulator.setSpeed(Integer.parseInt(speed.getText()));
-        //         }
-        //     }
-        // );
 
         startButton.addActionListener(
             new ActionListener(){
@@ -155,9 +170,9 @@ public class AnimatedView extends JFrame implements SimulatorView {
         return buttonPannel;
     }
 
-    public void updateFoodLevelField(int level) { this.foodLevel.setText(level + " unidades de comida.");}
+    public void updateFoodLevelField(int level) { this.foodLevel.setText("Comida para coelho: "+level );}
 
-    public void updateSeasonField(String season) { this.seasonLabel.setText(season); }
+    public void updateSeasonField(String season) { this.seasonLabel.setText("Estação atual: "+season); }
 
     /**
      * Define a color to be used for a given class of animal.
