@@ -23,8 +23,8 @@ import Utils.*;
  * software da simulação. Responsável pela instanciação da simulação
  * em si e inicio dos procedimentos e rotinas de execução.
  * 
- * @author David J. Barnes and Michael Kolling
- * @version 2002-04-09
+ * @author Grupo, David J. Barnes and Michael Kolling
+ * @version 1.0 SNAPSHOT
  */
 public class Simulator{
 
@@ -440,5 +440,5 @@ public class Simulator{
      * @param speed Um valor inteiro para a definição da velocidade de execução da simulação.
      */
     public static void setSpeed(int speed){ Simulator.speed = speed; }
-    
+
 }
