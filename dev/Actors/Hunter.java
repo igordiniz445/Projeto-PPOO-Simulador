@@ -1,6 +1,5 @@
 package Actors;
 
-import View.Drawable;
 import Controllers.Field;
 import Controllers.SeasonsController;
 import Utils.Location;
@@ -9,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class Hunter implements Actor, Drawable {
+public class Hunter implements Actor {
     
     private static final int MAX_AGE = 350;
     private static final double BREEDING_PROBABILITY = 0.05;
