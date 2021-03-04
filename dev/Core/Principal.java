@@ -13,7 +13,7 @@ public class Principal {
   /**
    * Método chamado pela JVM para execução do código.
    * 
-   * @params args Argumentos via cli.
+   * @param args Argumentos via cli.
    */
   public static void main(String[] args) {
 

@@ -69,7 +69,7 @@ public class Season {
     /**
      * Método modificador do atributo name da breedingAjust.
      * 
-     * @param breedingAjust Taxa de ajuste da taxa de reprodução.
+     * @param breedingAdjust Taxa de ajuste da taxa de reprodução.
      */
     public void setBreedingAdjust(Integer breedingAdjust) { this.breedingAdjust = breedingAdjust; }
 
@@ -83,7 +83,7 @@ public class Season {
     /**
      * Método modificador do atributo name da hungerAjust.
      * 
-     * @param hungerAjust Taxa de ajuste da taxa de alimentação.
+     * @param hungerAdjust Taxa de ajuste da taxa de alimentação.
      */
     public void setHungerAdjust(Integer hungerAdjust) { this.hungerAdjust = hungerAdjust; }
 

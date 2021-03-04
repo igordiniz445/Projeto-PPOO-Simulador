@@ -41,6 +41,7 @@ public class FieldStats {
      * Método responsável pelo acesso a informação sobre
      * quais animais estão presentes no campo da simulação.
      * 
+     * @param field Campo de simulação.
      * @return Uma string contendo informações sobre quais animais estão no campo.
      */
     public String getPopulationDetails(Field field) {
@@ -115,6 +116,7 @@ public class FieldStats {
     /**
      * Determina se a simulação ainda é viavel prosseguir.
      * 
+     * @param field Campo de simulação.
      * @return true Se ainda há mais de uma espécie de ator presente na simualação em estado vivo.
      */
     public boolean isViable(Field field) {
@@ -169,6 +171,6 @@ public class FieldStats {
         }
 
         countsValid = true;
-        
+
     }
 }
