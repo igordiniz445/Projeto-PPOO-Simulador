@@ -11,35 +11,77 @@ import Core.SimulatorView;
 import Core.Simulator;
 
 /**
- * A graphical view of the simulation grid. The view displays a colored
- * rectangle for each location representing its contents. It uses a default
- * background color. Colors for each type of species can be defined using the
- * setColor method.
+ * Uma visão gráfica da grade de simulação. A vista mostra um colorido
+ * retângulo para cada local que representa seu conteúdo. Ele usa um padrão
+ * cor de fundo. As cores para cada tipo de espécie podem ser definidas usando o
+ * método setColor
  * 
- * @author David J. Barnes and Michael Kolling
- * @version 2002-04-23
+ * @author Grupo
+ * @version 1.0 SNAPSHOT
  */
 public class AnimatedView extends JFrame implements SimulatorView {
-    // Colors used for empty locations.
+
+    /**
+     * Cor usada para posição vazia.
+     */
     private static final Color EMPTY_COLOR = Color.white;
-    // Color used for objects that have no defined color.
+    
+    /**
+     * Cor usasda para objetos sem cor definida.
+     */
     private static final Color UNKNOWN_COLOR = Color.gray;
 
+    /**
+     * Prefixo textual na representação do passo atual na GUI.
+     */
     private final String STEP_PREFIX = "Step: ";
+
+    /**
+     * Prefixo textual na representação da população na GUI.
+     */
     private final String POPULATION_PREFIX = "Population: ";
+
+    /**
+     * Painel de botões de controle da simuação.
+     */
     private JPanel buttonPannel;
+    
+    /**
+     * Labels textuais de informações.
+     */
     private JLabel stepLabel, population, foodLevel, seasonLabel, textSpeed;
+
+    /**
+     * Botões de controle da simulação.
+     */
     private JButton startButton, pauseButton, forwardButton;
+
+    /**
+     * Visualização do campo da simulação.
+     */
     private FieldView fieldView;
+
+    /**
+     * TextArea da informação sobre velocidade.
+     */
     private JTextArea speed;
 
-    // A map for storing colors for participants in the simulation
+    
+    /**
+     * Um hashmap com as cores dos participantes da simulção.
+     */
     private HashMap colors;
-    // A statistics object computing and storing simulation information
+
+    /**
+     * Estatisticas para serem apresentadas.
+     */
     private FieldStats stats;
 
     /**
-     * Create a view of the given width and height.
+     * Construtor sobre parametros de largura e profundidade.
+     * 
+     * @param height Altura do campo de simulação.
+     * @param width Largura do campo de simulação.
      */
     public AnimatedView(int height, int width) {
 
@@ -76,8 +118,10 @@ public class AnimatedView extends JFrame implements SimulatorView {
 
     /**
      * Cria menu lateral com botões e indicadores;
+     * 
+     * @return JPanel Um painel com os botões.
      */
-    public JPanel RightPannel(){
+    public JPanel RightPannel() {
         JPanel rightPannel = new JPanel();
         rightPannel.setLayout(new GridLayout(6,1));
         rightPannel.add(textSpeed);
@@ -88,22 +132,37 @@ public class AnimatedView extends JFrame implements SimulatorView {
         return rightPannel;
     }
 
-    public JPanel FoodPannel(){
+    /**
+     * Constroi um painel com informações de comida.
+     * @return JPanel Um painel com as informações de comida.
+     */
+    public JPanel FoodPannel() {
+
         JPanel labePanel = new JPanel();
         labePanel.add(foodLevel);
         return labePanel;
+
     }
 
-    public JPanel SeasonPannel(){
+    /**
+     * Constroi um painel com informações de estação.
+     * @return JPanel Um painel com as informações de estação.
+     */
+    public JPanel SeasonPannel() {
+
         JPanel seasonPanel = new JPanel();
         seasonPanel.add(seasonLabel);
         return seasonPanel;
+
     }
 
-    public JPanel CreateButtonsPannel(){
-        buttonPannel = new JPanel();
+    /**
+     * Constroi um painel com botões de controle.
+     * @return JPanel Um painel com os botões de controle.
+     */
+    public JPanel CreateButtonsPannel() {
 
-        
+        buttonPannel = new JPanel();
 
         buttonPannel.add(startButton, BorderLayout.LINE_START);
         buttonPannel.add(pauseButton, BorderLayout.AFTER_LAST_LINE);
@@ -133,6 +192,7 @@ public class AnimatedView extends JFrame implements SimulatorView {
 				// TODO Auto-generated method stub
 				
 			}
+
         });
 
         startButton.addActionListener(
@@ -167,40 +227,58 @@ public class AnimatedView extends JFrame implements SimulatorView {
                 }
             }
         );
+
         return buttonPannel;
     }
 
+    /**
+     * Atualiza a informação da quantidade de comida na simulação.
+     *
+     * @param level Valor da quantidade de comida.
+     */
     public void updateFoodLevelField(int level) { this.foodLevel.setText("Comida para coelho: "+level );}
 
+    /**
+     * Atualiza a informação da da estação atual na simulação.
+     *
+     * @param season Estação atual.
+     */
     public void updateSeasonField(String season) { this.seasonLabel.setText("Estação atual: "+season); }
 
     /**
-     * Define a color to be used for a given class of animal.
+     * Define a cor para ser usada por cada animal.
+     * 
+     * @param animalClass Classe do animal.
+     * @param color Cor a ser usada.
      */
-    public void setColor(Class animalClass, Color color) {
-        colors.put(animalClass, color);
-    }
+    public void setColor(Class animalClass, Color color) { colors.put(animalClass, color); }
 
     /**
-     * Define a color to be used for a given class of animal.
+     * Acessa a cor de um animal.
+     * 
+     * @param animalClass A classe do animal cujo a cor vai ser buscada.
+     * @return Color A cor do animal.
      */
     private Color getColor(Class animalClass) {
+
         Color col = (Color) colors.get(animalClass);
-        if (col == null) {
-            // no color defined for this class
-            return UNKNOWN_COLOR;
-        } else {
-            return col;
-        }
+
+        return (col == null) ? UNKNOWN_COLOR : col;
+        // if (col == null) {
+        //     return UNKNOWN_COLOR;
+        // } else {
+        //     return col;
+        // }
     }
 
     /**
-     * Show the current status of the field.
+     * Exibe as informações do campo de simulação atual.
      * 
-     * @param step  Which iteration step it is.
-     * @param stats Status of the field to be represented.
+     * @param step  Passo atual do processo de simulação..
+     * @param field Campo de simulação atual.
      */
     public void showStatus(int step, Field field) {
+
         if (!isVisible())
             setVisible(true);
 
@@ -227,21 +305,20 @@ public class AnimatedView extends JFrame implements SimulatorView {
     }
 
     /**
-     * Determine whether the simulation should continue to run.
+     * Determina se a simualação deev continuar.
      * 
-     * @return true If there is more than one species alive.
+     * @return true Se a condição de existencia ainda não foi alcançada.
      */
-    public boolean isViable(Field field) {
-        return stats.isViable(field);
-    }
+    public boolean isViable(Field field) { return stats.isViable(field); }
 
     /**
-     * Provide a graphical view of a rectangular field. This is a nested class (a
-     * class defined inside a class) which defines a custom component for the user
-     * interface. This component displays the field. This is rather advanced GUI
-     * stuff - you can ignore this for your project if you like.
+     * Fornece uma visão gráfica de um campo retangular. Esta é uma classe aninhada (um
+     * classe definida dentro de uma classe) que define um componente personalizado para o usuário
+     * interface. Este componente exibe o campo. Esta é uma GUI bastante avançada
+     * stuff - você pode ignorar isso para o seu projeto, se desejar.
      */
     private class FieldView extends JPanel {
+        
         private final int GRID_VIEW_SCALING_FACTOR = 8;
 
         private int gridWidth, gridHeight;

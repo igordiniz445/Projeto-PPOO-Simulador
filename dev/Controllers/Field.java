@@ -18,12 +18,20 @@ import Utils.Location;
  * @version 2002-04-09
  */
 public class Field {
+
+    /**
+     * Objeto para randomização de valores utlizado pela classe.
+     */
     private static final Random rand = new Random();
 
-
-    // A profundidade e largura de um campo
+    /**
+     * A profundidade e largura de um campo
+     */
     private int depth, width;
-    // Compartimento para animais.
+
+    /**
+     * Compartimento para animais.
+     */
     private Object[][] field;
 
     /**
@@ -33,20 +41,24 @@ public class Field {
      * @param width A largura do campo.
      */
     public Field(int depth, int width) {
+
         this.depth = depth;
         this.width = width;
         field = new Object[depth][width];
+
     }
 
     /**
-     * Esvazia o campo.
+     * Método responsável por esvazia o campo.
      */
     public void clear() {
+
         for (int row = 0; row < depth; row++) {
             for (int col = 0; col < width; col++) {
                 field[row][col] = null;
             }
         }
+
     }
 
     /**
@@ -58,7 +70,9 @@ public class Field {
      * @param col    Coordenada da coluna da local.
      */
     public void place(Object animal, int row, int col) {
+
         place(animal, new Location(row, col));
+
     }
 
     /**
@@ -69,7 +83,9 @@ public class Field {
      * @param location Onde colocar o animal.
      */
     public void place(Object animal, Location location) {
+
         field[location.getRow()][location.getCol()] = animal;
+
     }
 
     /**
@@ -79,7 +95,9 @@ public class Field {
      * @return O animal em uma localidade, ou nulo se não existir.
      */
     public Object getObjectAt(Location location) {
+
         return getObjectAt(location.getRow(), location.getCol());
+
     }
 
     /**
@@ -89,9 +107,7 @@ public class Field {
      * @param col A coluna desejada.
      * @return O animal em uma localidade, ou nulo se não existir.
      */
-    public Object getObjectAt(int row, int col) {
-        return field[row][col];
-    }
+    public Object getObjectAt(int row, int col) { return field[row][col]; }
 
     /**
      * Gera um local aleatório que é adjacente a um dado local, ou a mesma local. O
@@ -102,20 +118,28 @@ public class Field {
      *         local passado.
      */
     public Location randomAdjacentLocation(Location location) {
+        
         int row = location.getRow();
         int col = location.getCol();
-
         // Gera um offset de -1, 0 ou +1 para ambos linha e coluna atuais.
         int nextRow = row + rand.nextInt(3) - 1;
         int nextCol = col + rand.nextInt(3) - 1;
         // Checagem para verificar se o local está fora dos limites.
+
         if (nextRow < 0 || nextRow >= depth || nextCol < 0 || nextCol >= width) {
+
             return location;
+
         } else if (nextRow != row || nextCol != col) {
+
             return new Location(nextRow, nextCol);
+
         } else {
+
             return location;
+
         }
+
     }
 
     /**
@@ -152,50 +176,74 @@ public class Field {
      * @return Um iterador que itera sobre dada localização adjacente passada.
      */
     public Iterator<Location> adjacentLocations(Location location) {
+
         int row = location.getRow();
         int col = location.getCol();
         LinkedList<Location> locations = new LinkedList<Location>();
+
         for (int roffset = -1; roffset <= 1; roffset++) {
+
             int nextRow = row + roffset;
+
             if (nextRow >= 0 && nextRow < depth) {
+
                 for (int coffset = -1; coffset <= 1; coffset++) {
+
                     int nextCol = col + coffset;
                     // Exclui locais inválidos de um dado local.
                     if (nextCol >= 0 && nextCol < width && (roffset != 0 || coffset != 0)) {
+
                         locations.add(new Location(nextRow, nextCol));
+
                     }
                 }
             }
         }
+
         Collections.shuffle(locations, rand);
         return locations.iterator();
+
     }
 
+    /**
+     * Método responsável por localizar posições adjacentes
+     * sem a presença de nenhum ator, posições vazias.
+     * 
+     * @param location Objeto com coordenadas de localização
+     * @return Uma lista com localizações vazias encontradas.
+     */
     public List<Location> getFreeAdjacentLocation(Location location){
-        List<Location> freeAdjacentLocation = new ArrayList<Location>();
         
+        List<Location> freeAdjacentLocation = new ArrayList<Location>();
         Iterator<Location> adjacentLocation = this.adjacentLocations(location);
         
-        while(adjacentLocation.hasNext()){
+        while(adjacentLocation.hasNext()) {
+
             Location freeLocation = freeAdjacentLocation(adjacentLocation.next());
-            if(freeLocation != null){
+            
+            if(freeLocation != null) {
+            
                 freeAdjacentLocation.add(location);
+            
             }
         }
+
         return freeAdjacentLocation;
+
     }
 
     /**
+     * Método acessador para o estado do atributo depth.
+     * 
      * @return A profundidade do campo.
      */
-    public int getDepth() {
-        return depth;
-    }
+    public int getDepth() { return depth; }
 
     /**
+     * Método acessador do estado do atributo width.
+     * 
      * @return A largura do campo.
      */
-    public int getWidth() {
-        return width;
-    }
+    public int getWidth() { return width; }
+
 }

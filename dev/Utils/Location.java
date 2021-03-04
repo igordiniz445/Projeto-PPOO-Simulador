@@ -1,68 +1,84 @@
 package Utils;
 
 /**
- * Represent a location in a rectangular grid.
+ * Representa um objeto com coordenadas em um sistema
+ * retangular de grid, o campo da simulação.
  * 
  * @author David J. Barnes and Michael Kolling
  * @version 2002-04-09
  */
 public class Location {
-    // Row and column positions.
+
+    /**
+     * Linha, repersenta uma coordenada X.
+     */
     private int row;
+
+    /**
+     * Coluna, repersenta uma coordenada Y.
+     */
     private int col;
 
     /**
-     * Represent a row and column.
+     * Construtor do objeto que repersenta
+     * as coordenadas X e Y.
      * 
-     * @param row The row.
-     * @param col The column.
+     * @param row A linha, coordenada X.
+     * @param col A coluna, coordenada Y.
      */
     public Location(int row, int col) {
+
         this.row = row;
         this.col = col;
+
     }
 
     /**
-     * Implement content equality.
+     * Implementa operador de equidade de objeto.
      */
     public boolean equals(Object obj) {
+
         if (obj instanceof Location) {
+
             Location other = (Location) obj;
+
             return row == other.getRow() && col == other.getCol();
+
         } else {
+
             return false;
+
         }
     }
 
     /**
      * Return a string of the form row,column
+     * Retorna uma string no formato linha,coluna.
      * 
-     * @return A string representation of the location.
+     * @return String Uma strnig representando as coordenadas de localização.
      */
-    public String toString() {
-        return row + "," + col;
-    }
+    public String toString() { return row + "," + col; }
 
     /**
-     * Use the top 16 bits for the row value and the bottom for the column. Except
-     * for very big grids, this should give a unique hash code for each (row, col)
-     * pair.
+     * use os 16 bits superiores para o valor da linha e os inferiores para a coluna. Exceto
+     * para grades muito grandes, isso deve fornecer um código hash exclusivo para cada (linha, coluna)
+     * 
+     * @return int Um valor inteiro do calculo.
      */
-    public int hashCode() {
-        return (row << 16) + col;
-    }
+    public int hashCode() { return (row << 16) + col; }
 
     /**
-     * @return The row.
+     * Método acessador do atributo linha, coordenada X.
+     * 
+     * @return A linha, coordenada X.
      */
-    public int getRow() {
-        return row;
-    }
+    public int getRow() { return row; }
 
     /**
-     * @return The column.
+     * Método acessador do atributo coluna, coordenada Y.
+     * 
+     * @return A linha, coordenada Y.
      */
-    public int getCol() {
-        return col;
-    }
+    public int getCol() { return col; }
+    
 }
