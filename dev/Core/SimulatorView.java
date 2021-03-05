@@ -4,7 +4,7 @@ import java.awt.*;
 
 import Controllers.Field;
 
-/*
+/**
  * Interface para implementação de interface
  * gráfica do simulador.
  * 

@@ -14,22 +14,38 @@ import Core.Simulator;
  * @version 2002-04-11
  */
 public class Rabbit extends Animal {
-    // Caracteristicas de todos os coelhos
-
-    // Idade para se reproduzie
+    
+    /**
+     * Idade para começar a se reproduzir
+     */
     private static final int BREEDING_AGE = 5;
-    // Idade maxima de vida
+
+    /**
+     * Idade maxima de vida
+     */
     private static final int MAX_AGE = 50;
-    // Chance de se reproduzir
+    
+    /**
+     * Chance de se reproduzir
+     */
     private static final double BREEDING_PROBABILITY = 0.15;
-    // Numero maximo de reproduções
+
+    /**
+     * Numero maximo de reproduções
+     */
     private static final int MAX_LITTER_SIZE = 5;
-    // Dias que um coelho pode passar sem comer
+
+    /**
+     * Dias que um coelho pode passar sem comer
+     */
     private int CARROT_FOOD_LEVEL = 3;
-    // Variavel pra criar deciçoes aleatórias
+
+    /**
+     * Variavel pra criar deciçoes aleatórias
+     */
     private static final Random rand = new Random();
 
-
+    
     private Field currentField;
 
     /**
@@ -49,26 +65,32 @@ public class Rabbit extends Animal {
 
     /**
      * Coelho sempre irá correr, as vezes se alimentar e/ou reproduzir, e sempre irá invelhecer
-     * will breed or die of old age.
+     * 
+     * @param updatedField Campo de simulação
+     * @param newRabbits Coelhos Nascidos
      */
     public void run(Field updatedField, List<Actor> newRabbits) {
+
         incrementAge();
         eatFood();
         if (isActive()) {
             giveBirth(newRabbits, updatedField);
 
             Location newLocation = updatedField.freeAdjacentLocation(location);
-            // Only transfer to the updated field if there was a free location
+            
             if (newLocation != null) {
                 setLocation(newLocation);
                 updatedField.place(this, newLocation);
             } else {
-                // can neither move nor stay - overcrowding - all locations taken
+            
                 setActive(false);
             }
         }
     }
 
+    /**
+     * Implementa o ato de se alimentar.
+     */
     private void eatFood() {
 
         if (isActive()) {
@@ -90,7 +112,13 @@ public class Rabbit extends Animal {
 
     }
 
-
+    /**
+     * Método responsavel por realocar os filhoets em novas
+     * posições adjacentes vazias.
+     * 
+     * @param newRabbits Lista de novos filhotes
+     * @param updatedField Campo de simulação atualizado.
+     */
     private void giveBirth(List<Actor> newRabbits, Field updatedField) {
         int births = breed();
         for(int b = 0; b < births; b++){
@@ -113,8 +141,9 @@ public class Rabbit extends Animal {
 
     /**
      * Generate a number representing the number of births, if it can breed.
+     * Gera o número de filhotes caso o coelho possa se reproduzir.
      * 
-     * @return The number of births (may be zero).
+     * @return O numero de filhotes, pode ser zero inclusive.
      */
     private int breed() {
         int births = 0;
@@ -125,46 +154,60 @@ public class Rabbit extends Animal {
     }
 
     /**
-     * A rabbit can breed if it has reached the breeding age.
+     * Verifica se o animal esta em idade reprodutiva.
+     * 
+     * @return true Se o coelho pode reproduzir.
      */
     @Override
-    protected boolean canBreed() {
-        return getAge() >= BREEDING_AGE;
-    }
+    protected boolean canBreed() { return getAge() >= BREEDING_AGE; }
 
     /**
-     * Tell the rabbit that it's dead now :(
+     * Método modificador do atributo active, caso o coelho esteja
+     * ativo na simulação.
+     * 
      */
     public void setEaten() {
         setActive(false);
     }
 
     /**
-     * Set the animal's location.
+     * Método modificador do atributo localização do animal.
      * 
-     * @param row The vertical coordinate of the location.
-     * @param col The horizontal coordinate of the location.
+     * @param row Linha, a posição em coordenada X.
+     * @param col Coluna, a posição em coordenada Y.
      */
-    public void setLocation(int row, int col) {
-        this.location = new Location(row, col);
-    }
+    public void setLocation(int row, int col) { this.location = new Location(row, col); }
 
+    /**
+     * Sobrescrita do método action para implementar ação do animal.
+     * 
+     * @param field Campo de simulação.
+     * @param updatedField Campo atualizado de simulação.
+     * @param newAnimals Lista cmo novos animais nascidos.
+     */
     @Override
     public void action(Field field, Field updatedField, List<Actor> newAnimals) {
         run(updatedField, newAnimals);
     }
 
+    /**
+     * Representa textualmente o objeto em questão.
+     * 
+     * @return Strnig Uma representação textual do objeto Coelho.
+     */
     @Override
     public String toString() {
         // TODO Auto-generated method stub
         return "Coelho";
     }
 
+    /**
+     * Sobrescrita do método acessador da idade de reprodução do coelho.
+     * 
+     * @param int Valor da idade de reprodução do coelho.
+     */
     @Override
-    public int getBreedingAge() {
-        // TODO Auto-generated method stub
-        return this.BREEDING_AGE;
-    }
+    public int getBreedingAge() { return this.BREEDING_AGE; }
 
 
 }
